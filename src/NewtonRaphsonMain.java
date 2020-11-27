@@ -86,23 +86,25 @@ public class NewtonRaphsonMain {
         xNew = iterData[2];
 
         //stopping criterion:
-        // iteration <= stopping Iteration && error <= stopping Error% && f(xi+1) <= stopping f(xi)
+        // iteration !> stopping Iteration && error !<= stopping Error% && f(xi+1) !<= stopping f(xi)
         if(!(iterData[0]>stopCrit.get(0)) && !(iterData[6]<=stopCrit.get(1)) && !(Math.abs(iterData[5])<=stopCrit.get(2))){
             //update iteration row (Row #i)
             double[] iterDatai = {iterData[0],xNew,xCurr,iterData[3],iterData[4],iterData[5],iterData[6]};
 
             runNewtonRaphsonAlgo(coefficients,stopCrit,iterDatai);
         } else {
-            iterData[1] = xNew;
-            methods.printIterationData(iterData);   //print trailing iteration row
-
+            if(iterData[0]<=stopCrit.get(0)){
+                iterData[1] = xNew;
+                methods.printIterationData(iterData);   //print trailing iteration row
+            }
+            
             System.out.println("\nA stopping criteria has been met--stopped iterating.");
             DecimalFormat df = new DecimalFormat("0.00");
             if(xNew > 0) df.setRoundingMode(RoundingMode.FLOOR);
             else df.setRoundingMode(RoundingMode.CEILING);
             approxRoot = Double.parseDouble(df.format(xNew));   //rootAsymp
             System.out.println("\nThe equation's root is approximately " + approxRoot);
-        } 
+        }
         return;
     }
 }
